@@ -1,10 +1,23 @@
-import React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
+import { fetchBreedImages } from '../api/api';
 
 export default function ActivityDetailsScreen({ route, navigation }) {
   const { activity } = route.params ?? {};
+
+  const [breedImages, setBreedImages]       = useState([]);
+  const [loadingGallery, setLoadingGallery] = useState(false);
+
+  useEffect(() => {
+    if (!activity?.breed) return;
+    setLoadingGallery(true);
+    fetchBreedImages(activity.breed, 6)
+      .then(setBreedImages)
+      .catch(() => {})
+      .finally(() => setLoadingGallery(false));
+  }, [activity?.breed]);
 
   if (!activity) {
     return (
@@ -23,7 +36,7 @@ export default function ActivityDetailsScreen({ route, navigation }) {
         <Text style={styles.title}>{activity.title}</Text>
 
         <View style={styles.metaRow}>
-          <Text style={styles.price}>{activity.price}</Text>
+          {activity.price ? <Text style={styles.price}>{activity.price}</Text> : null}
           {activity.rating != null && (
             <View style={styles.badge}>
               <Text style={styles.badgeText}>★ {activity.rating.toFixed(1)}</Text>
@@ -31,11 +44,30 @@ export default function ActivityDetailsScreen({ route, navigation }) {
           )}
         </View>
 
-        <Text style={styles.date}>{activity.date}</Text>
+        {activity.date     ? <Text style={styles.date}>{activity.date}</Text> : null}
         {activity.location ? <Text style={styles.location}>📍 {activity.location}</Text> : null}
 
-        <Text style={styles.descLabel}>About</Text>
-        <Text style={styles.desc}>{activity.description}</Text>
+        {activity.description ? (
+          <>
+            <Text style={styles.descLabel}>About</Text>
+            <Text style={styles.desc}>{activity.description}</Text>
+          </>
+        ) : null}
+
+        {(loadingGallery || breedImages.length > 0) && (
+          <View style={styles.gallerySection}>
+            <Text style={styles.descLabel}>More photos</Text>
+            {loadingGallery ? (
+              <ActivityIndicator color={COLORS.primary} style={styles.galleryLoader} />
+            ) : (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.gallery}>
+                {breedImages.map((uri, i) => (
+                  <Image key={i} source={{ uri }} style={styles.galleryImage} resizeMode="cover" />
+                ))}
+              </ScrollView>
+            )}
+          </View>
+        )}
 
         <CustomButton title="Join event" onPress={() => navigation.goBack()} style={styles.btn} />
       </View>
@@ -57,6 +89,10 @@ const styles = StyleSheet.create({
   location: { fontSize: FONT_SIZE.sm, color: COLORS.gray, marginBottom: SPACING.lg },
   descLabel: { fontSize: FONT_SIZE.md, fontWeight: '700', color: COLORS.black, marginBottom: SPACING.sm },
   desc: { fontSize: FONT_SIZE.md, color: COLORS.gray, lineHeight: 22, marginBottom: SPACING.xl },
+  gallerySection: { marginBottom: SPACING.xl },
+  galleryLoader: { marginVertical: SPACING.lg },
+  gallery: { marginLeft: -SPACING.lg, paddingLeft: SPACING.lg },
+  galleryImage: { width: 120, height: 100, borderRadius: 10, marginRight: SPACING.sm },
   btn: { marginTop: SPACING.sm },
   error: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: SPACING.xl },
   errorText: { fontSize: FONT_SIZE.lg, color: COLORS.danger },
