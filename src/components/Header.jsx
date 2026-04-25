@@ -9,12 +9,6 @@ import {
 } from 'react-native';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-/**
- * @param {string}          title        - заголовок (по центру)
- * @param {boolean}         showBack     - показати кнопку «Назад» зліва
- * @param {function}        onBack
- * @param {React.ReactNode} rightAction  - довільний елемент справа (іконка, кнопка)
- */
 export default function Header({ title, showBack = false, onBack, rightAction }) {
   return (
     <View style={styles.container}>
@@ -40,7 +34,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.white,
-    // Відступ зверху на iOS враховує статус-бар; Android має власний механізм
     paddingTop: Platform.select({ ios: 50, android: StatusBar.currentHeight + SPACING.sm }),
     paddingBottom: SPACING.md,
     paddingHorizontal: SPACING.lg,

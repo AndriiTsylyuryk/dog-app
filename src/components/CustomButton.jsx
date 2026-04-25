@@ -8,14 +8,6 @@ import {
 } from 'react-native';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-/**
- * @param {string}   title       - текст кнопки
- * @param {function} onPress     - обробник натискання
- * @param {'primary'|'outline'|'danger'} variant
- * @param {boolean}  loading     - показати спіннер замість тексту
- * @param {boolean}  disabled
- * @param {object}   style       - додаткові стилі контейнера
- */
 export default function CustomButton({
   title,
   onPress,
@@ -61,7 +53,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 50,
-    // Тінь — різна поведінка на iOS і Android
     ...Platform.select({
       ios: {
         shadowColor: COLORS.primary,

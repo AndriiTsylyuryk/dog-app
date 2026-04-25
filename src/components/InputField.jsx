@@ -9,15 +9,6 @@ import {
 } from 'react-native';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-/**
- * @param {string}   label         - мітка над полем
- * @param {string}   value
- * @param {function} onChangeText
- * @param {string}   placeholder
- * @param {boolean}  secureText    - якщо true — поле пароля з кнопкою показати/сховати
- * @param {string}   error         - текст помилки під полем
- * @param {object}   inputProps    - будь-які додаткові пропси TextInput
- */
 export default function InputField({
   label,
   value,
@@ -47,7 +38,6 @@ export default function InputField({
           {...inputProps}
         />
 
-        {/* Кнопка «Показати/сховати» тільки для поля пароля */}
         {secureText && (
           <TouchableOpacity onPress={() => setHidden(prev => !prev)} style={styles.toggle}>
             <Text style={styles.toggleText}>{hidden ? 'Показати' : 'Сховати'}</Text>
@@ -78,7 +68,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: COLORS.white,
     paddingHorizontal: SPACING.md,
-    // Висота однакова на обох платформах
     height: Platform.select({ ios: 48, android: 50 }),
   },
   rowFocused: {

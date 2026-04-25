@@ -8,20 +8,11 @@ import {
 } from 'react-native';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-/**
- * @param {string}   name          - ім'я співрозмовника
- * @param {string}   avatarUrl     - URL аватара
- * @param {string}   lastMessage   - текст останнього повідомлення
- * @param {string}   time          - час повідомлення, наприклад "14:32"
- * @param {number}   unread        - кількість непрочитаних (0 = не показувати бейдж)
- * @param {function} onPress
- */
 export default function ChatListItem({ name, avatarUrl, lastMessage, time, unread = 0, onPress }) {
   return (
     <TouchableOpacity style={styles.row} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.avatarWrap}>
         <Image source={{ uri: avatarUrl }} style={styles.avatar} />
-        {/* Зелена крапка онлайн-статусу */}
         <View style={styles.onlineDot} />
       </View>
 

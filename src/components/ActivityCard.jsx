@@ -10,17 +10,8 @@ import {
 } from 'react-native';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-/**
- * @param {string}   title       - назва активності
- * @param {string}   imageUrl    - URL зображення
- * @param {string}   price       - ціна, наприклад "$25"
- * @param {string}   date        - дата/час, наприклад "Friday, 10:00"
- * @param {number}   rating      - рейтинг 0-5
- * @param {function} onPress
- */
 export default function ActivityCard({ title, imageUrl, price, date, rating, onPress }) {
   const { width } = useWindowDimensions();
-  // Картка займає ~44% ширини екрана щоб поміщалось 2 в ряд
   const cardWidth = width * 0.44;
 
   return (
@@ -55,7 +46,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginRight: SPACING.md,
     overflow: 'hidden',
-    // Тінь
     ...Platform.select({
       ios: {
         shadowColor: COLORS.black,

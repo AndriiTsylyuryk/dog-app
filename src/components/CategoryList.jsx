@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ScrollView,
   TouchableOpacity,
@@ -8,11 +8,6 @@ import {
 } from 'react-native';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-/**
- * @param {Array<{id, label}>} categories  - масив категорій
- * @param {string|number}      activeId    - id активної категорії
- * @param {function}           onSelect    - onSelect(id)
- */
 export default function CategoryList({ categories = [], activeId, onSelect }) {
   return (
     <View>

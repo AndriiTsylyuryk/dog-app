@@ -9,18 +9,11 @@ import {
 } from 'react-native';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-/**
- * @param {string}   value
- * @param {function} onChangeText
- * @param {string}   placeholder
- * @param {function} onSubmit      - викликається при натисканні Enter або кнопки пошуку
- */
 export default function SearchBar({ value, onChangeText, placeholder = 'Search...', onSubmit }) {
   const [focused, setFocused] = useState(false);
 
   return (
     <View style={[styles.container, focused && styles.containerFocused]}>
-      {/* Іконка пошуку — Unicode щоб не підключати бібліотеку іконок */}
       <Text style={styles.icon}>🔍</Text>
 
       <TextInput
@@ -35,7 +28,6 @@ export default function SearchBar({ value, onChangeText, placeholder = 'Search..
         onBlur={() => setFocused(false)}
       />
 
-      {/* Кнопка очищення — з'являється тільки коли є текст */}
       {value?.length > 0 && (
         <TouchableOpacity onPress={() => onChangeText('')} style={styles.clearBtn}>
           <Text style={styles.clearText}>✕</Text>
