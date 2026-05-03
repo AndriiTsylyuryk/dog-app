@@ -15,4 +15,6 @@ export const SCREENS = {
   MAIN_TABS: 'MainTabs',
   MAIN_STACK: 'MainStack',
   MAP_STACK: 'MapStack',
+
+  FAVORITES: 'Favorites',
 };

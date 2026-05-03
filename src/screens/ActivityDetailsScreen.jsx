@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { addFavorite, removeFavorite } from '../redux/favoritesSlice';
 import CustomButton from '../components/CustomButton';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 import { fetchBreedImages } from '../api/api';
@@ -9,6 +11,12 @@ export default function ActivityDetailsScreen({ route, navigation }) {
 
   const [breedImages, setBreedImages]       = useState([]);
   const [loadingGallery, setLoadingGallery] = useState(false);
+
+  // Завдання 3: перевіряємо чи елемент вже збережено (useSelector)
+  const isFavorite = useSelector(state =>
+    state.favorites.some(item => item.id === activity?.id)
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!activity?.breed) return;
@@ -28,12 +36,29 @@ export default function ActivityDetailsScreen({ route, navigation }) {
     );
   }
 
+  // Завдання 3: додає або видаляє з обраного залежно від поточного стану
+  const handleFavorite = () => {
+    if (isFavorite) {
+      dispatch(removeFavorite(activity.id));
+    } else {
+      dispatch(addFavorite(activity));
+    }
+  };
+
   return (
     <ScrollView style={styles.root} contentContainerStyle={styles.content}>
       <Image source={{ uri: activity.imageUrl }} style={styles.image} resizeMode="cover" />
 
       <View style={styles.body}>
-        <Text style={styles.title}>{activity.title}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>{activity.title}</Text>
+          {/* Завдання 3: кнопка обраного — dispatch через useDispatch */}
+          <TouchableOpacity onPress={handleFavorite} style={styles.heartBtn}>
+            <Text style={[styles.heart, isFavorite && styles.heartActive]}>
+              {isFavorite ? '♥' : '♡'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.metaRow}>
           {activity.price ? <Text style={styles.price}>{activity.price}</Text> : null}
@@ -80,7 +105,11 @@ const styles = StyleSheet.create({
   content: { paddingBottom: SPACING.xxl },
   image: { width: '100%', height: 240 },
   body: { padding: SPACING.lg },
-  title: { fontSize: FONT_SIZE.xl, fontWeight: '700', color: COLORS.black, marginBottom: SPACING.md },
+  titleRow: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: SPACING.md },
+  title: { flex: 1, fontSize: FONT_SIZE.xl, fontWeight: '700', color: COLORS.black },
+  heartBtn: { paddingLeft: SPACING.md, paddingTop: 2 },
+  heart: { fontSize: 28, color: COLORS.grayBorder },
+  heartActive: { color: COLORS.danger },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.sm },
   price: { fontSize: FONT_SIZE.lg, fontWeight: '700', color: COLORS.primary },
   badge: { backgroundColor: COLORS.grayLight, borderRadius: 8, paddingHorizontal: SPACING.sm, paddingVertical: 4 },

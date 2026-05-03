@@ -1,28 +1,42 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet, Switch } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 import { useAuth } from '../context/AuthContext';
+// Завдання 2: отримуємо стан теми і функцію перемикання
+import { useTheme } from '../context/ThemeContext';
 
-const MENU_ITEMS = ['Appearance', 'Language', 'Privacy & Security', 'Storage'];
+const MENU_ITEMS = ['Language', 'Privacy & Security', 'Storage'];
 
 export default function SettingsScreen() {
   const [showLogout, setShowLogout] = useState(false);
-  const { logout } = useAuth();
+  const { logout }                  = useAuth();
+  const { isDark, toggleTheme, colors } = useTheme();
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { backgroundColor: colors.bg }]}>
       <View style={styles.profile}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>L</Text>
         </View>
-        <Text style={styles.profileName}>Lucas Scott</Text>
+        <Text style={[styles.profileName, { color: colors.text }]}>Lucas Scott</Text>
+      </View>
+
+      {/* Завдання 2: перемикач теми — застосовує ThemeContext */}
+      <View style={[styles.item, { borderBottomColor: colors.border }]}>
+        <Text style={[styles.itemText, { color: colors.text }]}>Dark Mode</Text>
+        <Switch
+          value={isDark}
+          onValueChange={toggleTheme}
+          trackColor={{ false: COLORS.grayBorder, true: COLORS.primary }}
+          thumbColor={COLORS.white}
+        />
       </View>
 
       {MENU_ITEMS.map(item => (
-        <TouchableOpacity key={item} style={styles.item}>
-          <Text style={styles.itemText}>{item}</Text>
-          <Text style={styles.chevron}>›</Text>
+        <TouchableOpacity key={item} style={[styles.item, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.itemText, { color: colors.text }]}>{item}</Text>
+          <Text style={[styles.chevron, { color: colors.subText }]}>›</Text>
         </TouchableOpacity>
       ))}
 
@@ -50,7 +64,7 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: COLORS.black },
+  root: { flex: 1 },
   profile: { alignItems: 'center', paddingVertical: SPACING.xl },
   avatar: {
     width: 72, height: 72, borderRadius: 36,
@@ -59,14 +73,14 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.sm,
   },
   avatarText: { color: COLORS.white, fontSize: FONT_SIZE.xl, fontWeight: '700' },
-  profileName: { color: COLORS.white, fontSize: FONT_SIZE.lg, fontWeight: '700' },
+  profileName: { fontSize: FONT_SIZE.lg, fontWeight: '700' },
   item: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md,
-    borderBottomWidth: 1, borderBottomColor: '#2A2A2A',
+    borderBottomWidth: 1,
   },
-  itemText: { color: COLORS.white, fontSize: FONT_SIZE.md },
-  chevron: { color: COLORS.textSecondary, fontSize: FONT_SIZE.xl },
+  itemText: { fontSize: FONT_SIZE.md },
+  chevron: { fontSize: FONT_SIZE.xl },
   logoutBtn: { margin: SPACING.xl },
   overlay: { flex: 1, backgroundColor: COLORS.overlay, alignItems: 'center', justifyContent: 'center' },
   dialog: {
