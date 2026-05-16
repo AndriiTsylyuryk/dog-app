@@ -17,4 +17,8 @@ export const SCREENS = {
   MAP_STACK: 'MapStack',
 
   FAVORITES: 'Favorites',
+
+  BREED_STACK:   'BreedStack',
+  BREED_EXPLORER: 'BreedExplorer',
+  BREED_GALLERY:  'BreedGallery',
 };

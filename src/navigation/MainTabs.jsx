@@ -5,16 +5,18 @@ import { COLORS, FONT_SIZE } from '../constants/colors';
 import { SCREENS } from '../constants/screens';
 import MainStack      from './MainStack';
 import MapStack       from './MapStack';
+import BreedStack     from './BreedStack';
 import ChatScreen     from '../screens/ChatScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 
 const TAB_ICONS = {
-  [SCREENS.MAIN_STACK]: '🏠',
-  [SCREENS.MAP_STACK]:  '🗺️',
-  [SCREENS.CHAT]:       '💬',
-  [SCREENS.SETTINGS]:   '⚙️',
+  [SCREENS.MAIN_STACK]:  '🏠',
+  [SCREENS.MAP_STACK]:   '🗺️',
+  [SCREENS.BREED_STACK]: '🐾',
+  [SCREENS.CHAT]:        '💬',
+  [SCREENS.SETTINGS]:    '⚙️',
 };
 
 export default function MainTabs() {
@@ -31,10 +33,11 @@ export default function MainTabs() {
         ),
       })}
     >
-      <Tab.Screen name={SCREENS.MAIN_STACK} component={MainStack}      options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name={SCREENS.MAP_STACK}  component={MapStack}       options={{ tabBarLabel: 'Map' }} />
-      <Tab.Screen name={SCREENS.CHAT}       component={ChatScreen}     options={{ tabBarLabel: 'Chat', title: 'Chats', headerShown: true, headerStyle: { backgroundColor: COLORS.white }, headerTitleStyle: { fontSize: FONT_SIZE.lg, fontWeight: '700' } }} />
-      <Tab.Screen name={SCREENS.SETTINGS}   component={SettingsScreen} options={{ tabBarLabel: 'Settings', headerShown: false }} />
+      <Tab.Screen name={SCREENS.MAIN_STACK}  component={MainStack}      options={{ tabBarLabel: 'Home' }} />
+      <Tab.Screen name={SCREENS.MAP_STACK}   component={MapStack}       options={{ tabBarLabel: 'Map' }} />
+      <Tab.Screen name={SCREENS.BREED_STACK} component={BreedStack}     options={{ tabBarLabel: 'Breeds' }} />
+      <Tab.Screen name={SCREENS.CHAT}        component={ChatScreen}     options={{ tabBarLabel: 'Chat', title: 'Chats', headerShown: true, headerStyle: { backgroundColor: COLORS.white }, headerTitleStyle: { fontSize: FONT_SIZE.lg, fontWeight: '700' } }} />
+      <Tab.Screen name={SCREENS.SETTINGS}    component={SettingsScreen} options={{ tabBarLabel: 'Settings', headerShown: false }} />
     </Tab.Navigator>
   );
 }

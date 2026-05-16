@@ -44,3 +44,20 @@ export const fetchBreedImages = async (breedFolder, count = 6) => {
   const { message } = await checkResponse(res);
   return message;
 };
+
+// Завдання 2 (нова функціональність): список усіх порід для Breed Explorer
+// API повертає об'єкт { bulldog: ['english','french'], labrador: [] }
+// Конвертуємо у плаский масив рядків: ['bulldog-english', 'bulldog-french', 'labrador', ...]
+export const fetchAllBreeds = async () => {
+  const res = await fetch(`${API_URL}/breeds/list/all`);
+  const { message } = await checkResponse(res);
+  const list = [];
+  for (const [breed, subs] of Object.entries(message)) {
+    if (subs.length === 0) {
+      list.push(breed);
+    } else {
+      subs.forEach(sub => list.push(`${breed}-${sub}`));
+    }
+  }
+  return list.sort();
+};
