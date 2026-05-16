@@ -1,3 +1,7 @@
+// Завдання 4: dayjs (2 kB) замість moment (72 kB) — однаковий API, у 36 разів менший бандл.
+// Жодної іншої важкої залежності (lodash, moment) у проєкті не виявлено.
+import dayjs from 'dayjs';
+
 const API_URL = 'https://dog.ceo/api';
 
 const breedFromUrl = url => {
@@ -26,7 +30,8 @@ export const fetchDogFeed = async (count = 10) => {
     title: breedFromUrl(imageUrl),
     breed: (imageUrl.split('/breeds/')[1] ?? '').split('/')[0],
     price: 'Free',
-    date: 'Available now',
+    // Завдання 4: dayjs форматує поточну дату — замість hardcoded рядка
+    date: dayjs().format('ddd, HH:mm'),
     rating: null,
     description: `Explore photos and facts about the ${breedFromUrl(imageUrl)} breed.`,
     location: 'Dog parks near you',

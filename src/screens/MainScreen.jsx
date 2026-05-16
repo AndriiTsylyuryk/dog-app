@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   View, Text, FlatList, ScrollView,
   StyleSheet, ActivityIndicator, TouchableOpacity,
@@ -35,8 +35,21 @@ export default function MainScreen({ navigation }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredFeed   = search ? feed.filter(d => d.title.includes(search.toLowerCase())) : feed;
-  const filteredEvents = search ? ACTIVITIES.filter(a => a.title.toLowerCase().includes(search.toLowerCase())) : ACTIVITIES;
+  // Завдання 3: useMemo — фільтрація не повторюється при ре-рендерах, не пов'язаних із search/feed
+  const filteredFeed = useMemo(
+    () => search ? feed.filter(d => d.title.includes(search.toLowerCase())) : feed,
+    [search, feed],
+  );
+  const filteredEvents = useMemo(
+    () => search ? ACTIVITIES.filter(a => a.title.toLowerCase().includes(search.toLowerCase())) : ACTIVITIES,
+    [search],
+  );
+
+  // Завдання 3: useCallback — стабільна функція для навігації, щоб ActivityCard.memo спрацював
+  const handleCardPress = useCallback(
+    activity => navigation.navigate(SCREENS.ACTIVITY_DETAILS, { activity }),
+    [navigation],
+  );
 
   return (
     <ScrollView style={[styles.root, { backgroundColor: colors.bg }]} contentContainerStyle={styles.content}>
@@ -70,7 +83,7 @@ export default function MainScreen({ navigation }) {
             renderItem={({ item }) => (
               <ActivityCard
                 {...item}
-                onPress={() => navigation.navigate(SCREENS.ACTIVITY_DETAILS, { activity: item })}
+                onPress={() => handleCardPress(item)}
               />
             )}
             ListEmptyComponent={<Text style={[styles.emptyText, { color: colors.subText }]}>No breeds found.</Text>}

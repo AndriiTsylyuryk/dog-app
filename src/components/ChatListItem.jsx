@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-export default function ChatListItem({ name, avatarUrl, lastMessage, time, unread = 0, onPress }) {
+// Завдання 3: React.memo — ChatListItem рендериться у великому списку;
+// memo запобігає повторному рендеру рядків, дані яких не змінились при пошуку
+function ChatListItem({ name, avatarUrl, lastMessage, time, unread = 0, onPress }) {
   return (
     <TouchableOpacity style={styles.row} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.avatarWrap}>
@@ -110,3 +112,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+export default React.memo(ChatListItem);

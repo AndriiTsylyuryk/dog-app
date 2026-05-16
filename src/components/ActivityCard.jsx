@@ -8,35 +8,53 @@ import {
   useWindowDimensions,
   Platform,
 } from 'react-native';
+// Завдання 2: Reanimated для анімації масштабування при натисканні
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import { COLORS, FONT_SIZE, SPACING } from '../constants/colors';
 
-export default function ActivityCard({ title, imageUrl, price, date, rating, onPress }) {
+function ActivityCard({ title, imageUrl, price, date, rating, onPress }) {
   const { width } = useWindowDimensions();
   const cardWidth = width * 0.44;
 
+  // Завдання 2: shared value — зберігається поза JS-потоком для плавної анімації
+  const scale = useSharedValue(1);
+
+  // Завдання 2: анімований стиль обчислюється на UI-потоці без JS bridge
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   return (
-    <TouchableOpacity style={[styles.card, { width: cardWidth }]} onPress={onPress} activeOpacity={0.85}>
-      <Image
-        source={{ uri: imageUrl }}
-        style={styles.image}
-        resizeMode="cover"
-      />
+    // Завдання 2: Animated.View — компонент, що підтримує анімовані стилі Reanimated
+    <Animated.View style={[styles.card, { width: cardWidth }, animStyle]}>
+      <TouchableOpacity
+        onPress={onPress}
+        onPressIn={() => { scale.value = withSpring(0.93, { damping: 14 }); }}
+        onPressOut={() => { scale.value = withSpring(1,    { damping: 14 }); }}
+        activeOpacity={1}
+      >
+        <Image source={{ uri: imageUrl }} style={styles.image} resizeMode="cover" />
 
-      <View style={styles.body}>
-        <Text style={styles.title} numberOfLines={2}>{title}</Text>
+        <View style={styles.body}>
+          <Text style={styles.title} numberOfLines={2}>{title}</Text>
 
-        <View style={styles.row}>
-          <Text style={styles.price}>{price}</Text>
-          {rating != null && (
-            <View style={styles.ratingBadge}>
-              <Text style={styles.ratingText}>★ {rating.toFixed(1)}</Text>
-            </View>
-          )}
+          <View style={styles.row}>
+            <Text style={styles.price}>{price}</Text>
+            {rating != null && (
+              <View style={styles.ratingBadge}>
+                <Text style={styles.ratingText}>★ {rating.toFixed(1)}</Text>
+              </View>
+            )}
+          </View>
+
+          {date ? <Text style={styles.date}>{date}</Text> : null}
         </View>
-
-        {date ? <Text style={styles.date}>{date}</Text> : null}
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Animated.View>
   );
 }
 
@@ -97,3 +115,6 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
 });
+
+// Завдання 3: React.memo — не перерендерює картку, якщо пропси не змінились
+export default React.memo(ActivityCard);
